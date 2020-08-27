@@ -1,43 +1,14 @@
 # ZS-GX1 Hacks
-Record of attempted hacks on the ZS-GX1 IP Camera
+_Original of these scripts can be found [here](https://github.com/ant-thomas/zsgx1hacks) _
 
-Confirmed working on the following camera models
- * ZS-GX1
- * Snowman SRC-001
- * GUUDGO GD-SC01
- * GUUDGO GD-SC03
- * GUUDGO GD-SC11
- * Digoo DG-W01F
- * YSA CIPC-GC13H
- * KERUI CIPC-GC15HE (read-only version)
+I've been poking at the Denver SHO-110 Wifi camera. This GOKE GK7102 powered camera features Wifi, infrared, two-way sound (which I don't use) and UTP. NO tilt or zoom.
 
-
-Disclaimer - I'm not a programmer, just a hobbyist that likes poking around with things like this. You use the software here at your own risk. If your camera isn't listed as supported you may break your camera. You may even break your camera if it is listed due to a variety of firmware versions available.
-
-A few people have asked if they can donate something, you probably have much better things to spend your money on, but if you insist you can on [PayPal](http://paypal.me/antthomascouk) [![Donate](https://www.paypalobjects.com/webstatic/en_US/i/buttons/pp-acceptance-small.png)](http://paypal.me/antthomascouk)
-
-I will look to put any donations towards getting some other cheap IP Cameras to hack and explore - suggestions welcome!
-
-This is a cheap Pan Tilt IP Camera (supposedly 1080p) that for a time was available on Gearbest for around £12. I bought 2 in an attempt to hack them as the reason they are so cheap is due to them being locked to paid cloud services.
+Disclaimer - I'm not a programmer, just a hobbyist that likes poking around. You use the software here at your own risk. If you try this on a different camera you may break (brick) your camera. You may even break your camera due to a variety of firmware versions available. DO NOT EVER make changes to the /home/start.sh script. Any mistake here WILL brick your camera.
 
 [SOC - GOKE - GK7102](https://www.unifore.net/company-highlights/goke-hd-ip-camera-solution-gk7101-gk7102.html)
 
-[Sensor - SC2135 - supposedly capable of 1080p 30fps](https://www.unifore.net/product-highlights/ip-camera-smartsens-cmos-image-sensors.html)
-
-
 ### Instructions
-There's a few different varieties of firmware across various brands of cameras which means it is impossible to know which version of the hack is the best for your camera. Older firmware are more hackable because the root filesystem is mounted read/write, new firmwares need the hack applying differently because the root filesystem is mounted read-only but the ```/home``` directory is writeable.
-
-For example  
-Version 3.1.1.0908 is read-write and can use [zsgx1hacks-v0.4.zip](https://github.com/ant-thomas/zsgx1hacks/raw/master/zsgx1hacks-v0.4.zip)  
-Version 3.2.8.0121 is read-only and can only use [readonlyhack-v0.1.zip](https://github.com/ant-thomas/zsgx1hacks/raw/master/readonlyhack-v0.1.zip)  
-If in doubt use the read-only hack as that is more likely to work across more cameras.
-
-#### How to check version
-If you have already configured the camera with the cloud app there should be some info within the app showing firmware version.  
-Using an onvif tool/app like Onvifer (Android) should give firmware version.  
-You should also be able to find the firmware version by logging in via telnet and excuting the command  
-```ls /tmp | grep -F 3.``` or ```ls /tmp | head -1```
+As opposed to some other camera's (see link to Ant-Thomes above), this camera has a read-only filesystem although the /home is writeable - lucky us. This enables us to tweak the filesystem ans software to our needs.
 
 #### Steps
 * Create network connection
@@ -45,7 +16,19 @@ You should also be able to find the firmware version by logging in via telnet an
   * Ethernet - plug in to network (doesn't need app setup)
 * Download hack for your camera
 
-#### Older firmware - read/write
+#### (NOT TESTED) 
+Apperently it is possible to create a working Wifi connection without using the app. I've not tried this myself, but it is pretty easy to try for yourself:
+* Connect the camera to your network by UTP cable
+* Telnet into the device, port 23 is open by default
+  * Use default credentials: root/cxlinux
+* vi /home/cls.conf
+  ```[cls_server]```
+  ```ssid = WIFI_ID```
+  ```passwd = PASSWORD```
+
+------ BELOW NEEDS TO BE REWRITTEN -----
+
+
 * Download zip file - [zsgx1hacks-v0.4.zip](https://github.com/ant-thomas/zsgx1hacks/raw/master/zsgx1hacks-v0.4.zip) 
 * Extract the contents of the zip file to a vfat/fat32 formatted microSD card
 * Change options in `config.txt`
